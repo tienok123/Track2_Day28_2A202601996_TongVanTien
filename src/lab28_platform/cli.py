@@ -28,6 +28,19 @@ from typing import Annotated, Any
 
 import typer
 
+# The bundled prompt template ships with Vietnamese characters. On Windows
+# PowerShell the default encoding is cp1252, which cannot represent those
+# characters and crashes the first CLI run with ``UnicodeEncodeError`` before
+# the user ever sees the JSON output. Force UTF-8 on both streams at import
+# time so every invocation path — ``lab28``, ``python -m lab28_platform.cli``
+# and the test shim — survives on every host OS.
+try:
+    sys.stdout.reconfigure(encoding="utf-8")  # type: ignore[attr-defined]
+    sys.stderr.reconfigure(encoding="utf-8")  # type: ignore[attr-defined]
+except (AttributeError, ValueError):
+    # Python < 3.7 or streams already closed in some test harnesses.
+    pass
+
 from lab28_platform.settings import Settings
 
 app = typer.Typer(
