@@ -1,40 +1,16 @@
 exit_code: 0
 stdout:
+🏃 View run release-v1 at: http://localhost:5100/#/experiments/1/runs/1b657ccf3ca84e7095adbde4e360e908
+🧪 View experiment at: http://localhost:5100/#/experiments/1
 {
-  "schema_version": "1",
-  "status": "degraded",
-  "components": [
-    {
-      "name": "kafka",
-      "ready": true,
-      "detail": "1 broker(s); 4 declared topics present",
-      "owner": "team-ingestion"
-    },
-    {
-      "name": "mlflow",
-      "ready": true,
-      "detail": "lab28-rag-release v1 is champion",
-      "owner": "team-data"
-    },
-    {
-      "name": "qdrant",
-      "ready": true,
-      "detail": "19 points; ok",
-      "owner": "team-serving"
-    },
-    {
-      "name": "vllm",
-      "ready": false,
-      "detail": "unreachable: ConnectError",
-      "owner": "team-serving"
-    },
-    {
-      "name": "feast",
-      "ready": true,
-      "detail": "ok",
-      "owner": "team-data"
-    }
-  ],
-  "trace_id": "00000000000000000000000000000000"
+  "name": "lab28-rag-release",
+  "version": "4",
+  "run_id": "1b657ccf3ca84e7095adbde4e360e908",
+  "alias": "champion",
+  "prompt_version": "v1",
+  "vllm_model_id": "Qwen/Qwen3-1.7B",
+  "embedding_model_id": "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2@faf4aa4225822f3bc6376869cb1164e8e3feedd0",
+  "delta_version": 12,
+  "top_k": 3
 }
 

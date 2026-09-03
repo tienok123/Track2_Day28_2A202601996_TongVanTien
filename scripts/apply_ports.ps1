@@ -86,4 +86,43 @@ if ($envOverrides.ContainsKey("LAB28_FEAST_PORT") -and -not $envOverrides.Contai
     Set-Item -Path "Env:LAB28_FEAST_SERVER_URL" -Value $url
 }
 
+# Derive client-facing URLs for the integration-test suite.
+if ($envOverrides.ContainsKey("LAB28_GATEWAY_PORT") -and -not $envOverrides.ContainsKey("LAB28_GATEWAY_URL")) {
+    $url = "http://localhost:$($envOverrides['LAB28_GATEWAY_PORT'])"
+    Set-Item -Path "Env:LAB28_GATEWAY_URL" -Value $url
+    Write-Host "[apply_ports] LAB28_GATEWAY_URL=$url" -ForegroundColor DarkGray
+}
+
+# API and gateway share the same port in the bundled compose file: the API pod
+# is reached directly (bypassing the rate limiter) so the lab can probe both a
+# proxied and an unproxied ask. If the student overrode one, copy it across;
+# otherwise mirror the gateway port to keep the stack reachable end-to-end.
+if ($envOverrides.ContainsKey("LAB28_API_PORT")) {
+    $apiUrl = "http://localhost:$($envOverrides['LAB28_API_PORT'])"
+    Set-Item -Path "Env:LAB28_API_URL" -Value $apiUrl
+    Write-Host "[apply_ports] LAB28_API_URL=$apiUrl" -ForegroundColor DarkGray
+} elseif ($envOverrides.ContainsKey("LAB28_GATEWAY_PORT") -and -not $envOverrides.ContainsKey("LAB28_API_URL")) {
+    $apiUrl = "http://localhost:$($envOverrides['LAB28_GATEWAY_PORT'])"
+    Set-Item -Path "Env:LAB28_API_URL" -Value $apiUrl
+    Write-Host "[apply_ports] LAB28_API_URL=$apiUrl (mirrored from LAB28_GATEWAY_PORT)" -ForegroundColor DarkGray
+}
+
+if ($envOverrides.ContainsKey("LAB28_AIRFLOW_PORT") -and -not $envOverrides.ContainsKey("LAB28_AIRFLOW_URL")) {
+    $url = "http://localhost:$($envOverrides['LAB28_AIRFLOW_PORT'])"
+    Set-Item -Path "Env:LAB28_AIRFLOW_URL" -Value $url
+    Write-Host "[apply_ports] LAB28_AIRFLOW_URL=$url" -ForegroundColor DarkGray
+}
+
+if ($envOverrides.ContainsKey("LAB28_PROMETHEUS_PORT") -and -not $envOverrides.ContainsKey("LAB28_PROMETHEUS_URL")) {
+    $url = "http://localhost:$($envOverrides['LAB28_PROMETHEUS_PORT'])"
+    Set-Item -Path "Env:LAB28_PROMETHEUS_URL" -Value $url
+    Write-Host "[apply_ports] LAB28_PROMETHEUS_URL=$url" -ForegroundColor DarkGray
+}
+
+if ($envOverrides.ContainsKey("LAB28_GRAFANA_PORT") -and -not $envOverrides.ContainsKey("LAB28_GRAFANA_URL")) {
+    $url = "http://localhost:$($envOverrides['LAB28_GRAFANA_PORT'])"
+    Set-Item -Path "Env:LAB28_GRAFANA_URL" -Value $url
+    Write-Host "[apply_ports] LAB28_GRAFANA_URL=$url" -ForegroundColor DarkGray
+}
+
 Write-Host "[apply_ports] applied $($envOverrides.Count) variable(s) from profile '$Profile'" -ForegroundColor Green

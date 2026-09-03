@@ -1,8 +1,19 @@
 """Run lab28 commands with proper encoding."""
 
 import sys
+from pathlib import Path
 
 from typer.testing import CliRunner
+
+# Ensure the ``src/`` layout is importable when the shim is invoked as a plain
+# script (``python run_lab28.py ...``). Without this, Python only searches the
+# current working directory, so ``from lab28_platform.cli import app`` fails
+# with ``ModuleNotFoundError`` on local Windows machines.
+_SRC_DIR = Path(__file__).resolve().parent / "src"
+if _SRC_DIR.is_dir():
+    src_str = str(_SRC_DIR)
+    if src_str not in sys.path:
+        sys.path.insert(0, src_str)
 
 from lab28_platform.cli import app
 
